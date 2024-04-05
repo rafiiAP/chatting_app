@@ -1,3 +1,19 @@
+buildscript {
+ 
+  repositories {
+    // Periksa apakah sudah menyertakan Maven Google atau tidak.
+    google()  // Google's Maven repository
+    mavenCentral()
+  }
+ 
+  dependencies {
+    // ...
+ 
+    // Tambahkan baris di bawah ini.
+    classpath 'com.google.gms:google-services:4.3.13'  // Google Services plugin
+  }
+}
+
 allprojects {
     repositories {
         google()
