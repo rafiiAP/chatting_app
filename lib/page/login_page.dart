@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'chat_page.dart';
@@ -15,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _auth = FirebaseAuth.instance;
 
   bool _obscureText = true;
   bool _isLoading = false;
@@ -73,8 +75,29 @@ class _LoginPageState extends State<LoginPage> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              onPressed: () =>
-                  Navigator.pushReplacementNamed(context, ChatPage.id),
+              onPressed: () async {
+                _isLoading = true;
+                setState(() {});
+                try {
+                  final navigator = Navigator.of(context);
+                  final email = _emailController.text;
+                  final password = _passwordController.text;
+
+                  await _auth.signInWithEmailAndPassword(
+                    email: email,
+                    password: password,
+                  );
+                  navigator.pushReplacementNamed(ChatPage.id);
+                } catch (e) {
+                  final snackBar = SnackBar(
+                    content: Text(e.toString()),
+                  );
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                } finally {
+                  _isLoading = false;
+                  setState(() {});
+                }
+              },
               child: const Text('Login'),
             ),
             TextButton(
